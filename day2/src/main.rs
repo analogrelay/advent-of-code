@@ -16,18 +16,32 @@ fn main() {
     let presents = eval(&content);
 
     // Fold to create result
-    let result = presents.iter().fold(0, process_present);
-    println!("The elves need {} sqft of wrapping paper!", result);
+    let (paper, ribbon) = presents.iter().fold((0, 0), process_present);
+    println!("The elves need {} sqft of wrapping paper and {} feet of ribbon!", paper, ribbon);
 }
 
-fn process_present(acc: u64, pres: &Present) -> u64 {
+fn process_present((paper, ribbon): (u64, u64), pres: &Present) -> (u64, u64) {
     let sides = [
         (pres.length * pres.width),
         (pres.width * pres.height),
         (pres.height * pres.length)];
     let extra = sides.iter().min().unwrap();
 
-    acc + sides.iter().fold(0, |acc, side| acc + (2 * side)) + extra
+    let paper = paper +
+        sides.iter().fold(0, |acc, side| acc + (2 * side)) + 
+        extra;
+
+    // Find the smallest two sides
+    let mut dims = [pres.length, pres.width, pres.height];
+    dims.sort();
+
+    let bow = pres.length * pres.width * pres.height;
+
+    let ribbon = ribbon + bow +
+        dims[0] + dims[0] +
+        dims[1] + dims[1];
+
+    (paper, ribbon)
 }
 
 fn eval(input: &str) -> Vec<Present> {
