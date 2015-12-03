@@ -1,20 +1,8 @@
-use std::{env,fs,process};
-use std::io::Read;
+extern crate adventutils;
 
 fn main() {
-    // Read args
-    let file_name = match env::args().nth(1) {
-        Some(f) => f,
-        None => {
-            println!("Usage: day1 [input file]");
-            process::exit(1);
-        }
-    };
-
     // Load the input file
-    let mut file = fs::File::open(file_name).unwrap();
-    let mut content = String::new();
-    file.read_to_string(&mut content).unwrap();
+    let content = adventutils::read_input_file();
 
     // Run the script
     let result = eval(&content);
