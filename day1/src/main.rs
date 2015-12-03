@@ -10,9 +10,17 @@ fn main() {
 }
 
 fn eval(input: &str) -> i64 {
-    input.chars().fold(0, |acc, item| match item {
-        '(' => acc + 1,
-        ')' => acc - 1,
-        _ => acc // Skip invalid input
-    })
+    input.chars().enumerate().fold((false, 0), |(entered_basement, acc), (idx, item)| {
+        let new_val = match item {
+            '(' => acc + 1,
+            ')' => acc - 1,
+            _ => acc // Skip invalid input
+        };
+        if new_val < 0 && !entered_basement {
+            println!("entered basement at index: {}", idx);
+            (true, new_val)
+        } else {
+            (entered_basement, new_val)
+        }
+    }).1
 }
