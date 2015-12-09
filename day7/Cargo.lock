@@ -1,0 +1,11 @@
+[root]
+name = "day7"
+version = "0.1.0"
+dependencies = [
+ "adventutils 0.1.0",
+]
+
+[[package]]
+name = "adventutils"
+version = "0.1.0"
+
