@@ -64,30 +64,52 @@ fn main() {
     let end_points : HashSet<_> = legs.iter().map(|l| l.end.clone()).collect();
     let all_locations : HashSet<_> = start_points.union(&end_points).collect();
 
-    let best_route = start_points.iter()
-        .map(|s| find_best_route(s, &legs, &all_locations, Route::Start))
+    let shortest_route = start_points.iter()
+        .map(|s| find_shortest_route(s, &legs, &all_locations, Route::Start))
         .filter_map(|r| r)
         .min_by(|r| r.distance());
 
-    match best_route {
-        Some(r) => println!("Found best route: {} ({})", r, r.distance()),
+    match shortest_route {
+        Some(r) => println!("Found shortest route: {} ({})", r, r.distance()),
+        None => println!("Failed to find a shortest route!")
+    }
+
+    let longest_route = start_points.iter()
+        .map(|s| find_longest_route(s, &legs, &all_locations, Route::Start))
+        .filter_map(|r| r)
+        .max_by(|r| r.distance());
+
+    match longest_route {
+        Some(r) => println!("Found longest route: {} ({})", r, r.distance()),
         None => println!("Failed to find a route!")
     }
 }
 
-// Find the best possible route from the specified start to all remaining locations
-fn find_best_route(start: &str, legs: &Vec<Leg>, locations: &HashSet<&String>, current_route: Route) -> Option<Route> {
+// Find the shortest possible route from the specified start to all remaining locations
+fn find_shortest_route(start: &str, legs: &Vec<Leg>, locations: &HashSet<&String>, current_route: Route) -> Option<Route> {
     // Have we already visited everything?
     if locations.iter().all(|l| current_route.already_visited(l)) {
-        println!("Candidate Route: {} = {}", current_route, current_route.distance());
         Some(current_route)
     } else {
-        println!("Probing: {} -> ?", current_route);
         legs.iter()
             .filter(|l| l.start == start && !current_route.already_visited(&l.end))
-            .map(|l| find_best_route(&l.end, legs, locations, Route::NextLeg(Box::new(current_route.clone()), l.clone())))
+            .map(|l| find_shortest_route(&l.end, legs, locations, Route::NextLeg(Box::new(current_route.clone()), l.clone())))
             .filter_map(|r| r)
             .min_by(|r| r.distance())
+    }
+}
+
+// Find the shortest possible route from the specified start to all remaining locations
+fn find_longest_route(start: &str, legs: &Vec<Leg>, locations: &HashSet<&String>, current_route: Route) -> Option<Route> {
+    // Have we already visited everything?
+    if locations.iter().all(|l| current_route.already_visited(l)) {
+        Some(current_route)
+    } else {
+        legs.iter()
+            .filter(|l| l.start == start && !current_route.already_visited(&l.end))
+            .map(|l| find_longest_route(&l.end, legs, locations, Route::NextLeg(Box::new(current_route.clone()), l.clone())))
+            .filter_map(|r| r)
+            .max_by(|r| r.distance())
     }
 }
 
