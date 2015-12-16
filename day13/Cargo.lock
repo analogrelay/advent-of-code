@@ -3,9 +3,15 @@ name = "day13"
 version = "0.1.0"
 dependencies = [
  "adventutils 0.1.0",
+ "permutohedron 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "adventutils"
 version = "0.1.0"
+
+[[package]]
+name = "permutohedron"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 

@@ -5,3 +5,4 @@ authors = ["Andrew Stanton-Nurse <andrew@andrewnurse.net>"]
 
 [dependencies]
 adventutils = { path = "../adventutils" }
+permutohedron = "0.2.0"
