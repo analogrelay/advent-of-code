@@ -1,0 +1,30 @@
+#!/usr/bin/env escript
+%%! -sname day1
+
+main([]) -> main(["input.txt"]);
+main([Filename]) ->
+    compile:file("santa.erl"),
+    Tokens = load_input(Filename),
+    Instructions = [ parse_instruction(I) || I <- Tokens ],
+    {ok, Pid} = santa:start_link(),
+    dispatch(Pid, Instructions).
+
+dispatch(Pid, []) ->
+    {Direction, {X, Y}} = santa:where_am_i(Pid),
+    {HQX, HQY} = santa:get_hq(Pid),
+    io:format("Santa finished facing ~p at ~p. Distance from start: ~p~n", [Direction, {X, Y}, X + Y]),
+    io:format("HQ is at ~p. Distance from start: ~p~n", [{HQX, HQY}, HQX + HQY]),
+    santa:stop(Pid);
+
+dispatch(Pid, [{Turn, Distance} | List]) ->
+    santa:move(Pid, Turn, Distance),
+    dispatch(Pid, List).
+
+load_input(Filename) ->
+    {ok, Data} = file:read_file(Filename),
+    Content = unicode:characters_to_list(Data),
+    Tokens = string:tokens(Content, ","),
+    [ string:strip(S) || S <- Tokens ].
+
+parse_instruction("L" ++ S) -> {left, element(1, string:to_integer(S))};
+parse_instruction("R" ++ S) -> {right, element(1, string:to_integer(S))}.
