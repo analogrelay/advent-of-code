@@ -1,0 +1,58 @@
+#!/usr/bin/env escript
+%%! -sname day3
+
+main([]) -> main(["input.txt"]);
+main([Filename]) ->
+    compile:file("triangle.erl"),
+    count_tris(p1_load_input(Filename), part1),
+    count_tris(p2_load_input(Filename), part2).
+
+count_tris(Tris, Part) ->
+    {ok, Pid} = triangle:start_link(),
+    {Time, Value} = timer:tc(
+        fun() ->
+            [ {triangle:is_triangle(Pid, Tri), Tri} || Tri <- Tris ]
+        end),
+    triangle:stop(Pid),
+    TriCount = length(lists:filter(fun({IsTri, _}) -> IsTri end, Value)),
+    io:format("Found ~p triangles for ~p in ~pms~n", [TriCount, Part, Time / 1000]).
+
+p1_load_input(Filename) ->
+    {ok, File} = file:open(Filename, [read]),
+    lists:reverse(p1_load_input(File, [])).
+
+p1_load_input(File, List) ->
+    case file:read_line(File) of
+        {ok, Line} -> NewList = [ p1_parse_line(Line) | List ],
+                      p1_load_input(File, NewList);
+        eof -> List
+    end.
+
+get_tri(Line) -> [ X || {X, _} <- [ string:to_integer(S) || S <- string:tokens(Line, " ") ]].
+
+p1_parse_line(Line) -> 
+    List = get_tri(Line),
+    [ X, Y, Z ] = List,
+    { X, Y, Z}.
+
+p2_load_input(Filename) ->
+    {ok, File} = file:open(Filename, [read]),
+    lists:reverse(p2_load_input(File, [])).
+
+p2_load_input(File, List) ->
+    % Read three lines
+    L1 = file:read_line(File),
+    L2 = file:read_line(File),
+    L3 = file:read_line(File),
+    case {L1, L2, L3} of
+        {eof, eof, eof} -> List;
+        {{ok, Line1}, {ok, Line2}, {ok, Line3}} ->
+            NewList = p2_parse_lines(Line1, Line2, Line3) ++ List,
+            p2_load_input(File, NewList)
+    end.
+
+p2_parse_lines(L1, L2, L3) ->
+    [ T1a, T2a, T3a ] = get_tri(L1),
+    [ T1b, T2b, T3b ] = get_tri(L2),
+    [ T1c, T2c, T3c ] = get_tri(L3),
+    [ {T1a, T1b, T1c}, {T2a, T2b, T2c}, {T3a, T3b, T3c} ].
