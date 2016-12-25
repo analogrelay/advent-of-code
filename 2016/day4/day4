@@ -1,0 +1,33 @@
+#!/usr/bin/env escript
+%%! -sname day4
+
+main([]) -> main(["input.txt"]);
+main([Filename]) ->
+    compile:file("decoder.erl"),
+    Rooms = load_input(Filename),
+    io:format("Loaded ~p rooms~n", [length(Rooms)]),
+    {ok, Pid} = decoder:start_link(),
+    dispatch(Pid, Rooms),
+    ok.
+
+dispatch(_, []) -> ok;
+dispatch(Pid, [R | Rest]) ->
+    decoder:add_room(Pid, R),
+    dispatch(Pid, Rest).
+
+load_input(Filename) ->
+    {ok, File} = file:open(Filename, [read]),
+    lists:reverse(load_input(File, [])).
+
+load_input(File, List) ->
+    case file:read_line(File) of
+        {ok, Line} -> NewList = [ parse_line(Line) | List ],
+                      load_input(File, NewList);
+        eof -> List
+    end.
+
+parse_line(Line) ->
+    Tokens = string:tokens(Line, "-[]"),
+    Segments = lists:sublist(Tokens, length(Tokens) - 3),
+    [ SectorID, Checksum ] = lists:sublist(Tokens, length(Tokens) - 2, 2),
+    { Segments, SectorID, Checksum }.
