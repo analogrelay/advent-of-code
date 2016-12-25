@@ -1,9 +1,11 @@
+% Santa Server
+
 -module(santa).
 -behavior(gen_server).
--export([start_link/0,move/3,stop/1,where_am_i/1,get_hq/1,init/1,handle_call/3,handle_cast/2,handle_info/2,terminate/2,code_change/3]).
+-export([start_link/0,move/3,where_am_i/1,get_hq/1,stop/1]).
+-export([init/1,handle_call/3,handle_cast/2,handle_info/2,terminate/2,code_change/3]).
 
-start_link() ->
-    gen_server:start_link(?MODULE, [], []).
+start_link() -> gen_server:start_link(?MODULE, [], []).
 
 %% Calls
 move(Pid, Turn, Distance) -> gen_server:cast(Pid, {move, Turn, Distance}).
@@ -28,6 +30,16 @@ handle_cast({move, Turn, Distance}, {Direction, Position, Visited, HQ}) ->
     {NewVisited, NewHQ, NewPosition} = walk(NewDirection, Distance, Position, Visited, HQ),
     {noreply, {NewDirection, NewPosition, NewVisited, NewHQ}}.
 
+handle_info(Msg, State) ->
+    io:format("Unexpected message: ~p~n", [Msg]),
+    {noreply, State}.
+
+terminate(normal, _State) -> ok.
+
+% We don't have any state migration.
+code_change(_OldVsn, State, _Extra) -> {ok, State}.
+
+%%% Private
 visit({X, Y}, Visited, notfound) ->
     NewHQ = case lists:member({X, Y}, Visited) of
         true -> {X, Y};
@@ -37,19 +49,6 @@ visit({X, Y}, Visited, notfound) ->
     {NewVisited, NewHQ};
 
 visit(_, Visited, HQ) -> {Visited, HQ}.
-
-handle_info(Msg, State) ->
-    io:format("Unexpected message: ~p~n", [Msg]),
-    {noreply, State}.
-
-terminate(normal, _State) ->
-    ok.
-
-code_change(_OldVsn, State, _Extra) ->
-    % We don't have any state migration.
-    {ok, State}.
-
-%%% Private
 turn(north, left) -> west;
 turn(west, left) -> south;
 turn(south, left) -> east;

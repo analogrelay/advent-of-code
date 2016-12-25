@@ -1,0 +1,63 @@
+#!/usr/bin/env escript
+%%! -sname day2
+
+main([]) -> main(["input.txt"]);
+main([Filename]) ->
+    compile:file("keypad.erl"),
+    Instructions = load_input(Filename),
+    run_mode(standard, Instructions),
+    run_mode(weird, Instructions).
+
+run_mode(Mode, Instructions) ->
+    Pids = run(Mode, 0, Instructions),
+    Numbers = receive_loop(Pids),
+    Sorted = lists:sort(fun({Ia, _}, {Ib, _}) -> Ia =< Ib end, Numbers),
+    io:format("Results for ~p mode: ~p~n", [Mode, [ N || {_, N} <- Sorted]]).
+
+receive_loop([]) -> [];
+receive_loop(Pids) ->
+    receive
+        { done, { I, From, Key } } ->
+            NewPids = lists:delete(From, Pids),
+            List = receive_loop(NewPids),
+            [ {I, Key} | List ]
+    end.
+
+run(_, _, []) -> [];
+run(Mode, I, [ Instrs | Rest ]) ->
+    % Create a process to handle this line. Why a process per line? Because I can. It's probably stupid.
+    Self = self(),
+    Pid = spawn_link(fun() -> run_single(Mode, I, Instrs, Self) end),
+    List = run(Mode, I + 1, Rest),
+    [ Pid | List ].
+
+run_single(Mode, I, Instrs, Parent) ->
+    {ok, Pid} = keypad:start_link(Mode),
+    ok = dispatch(Pid, Instrs),
+    Key = keypad:getkey(Pid),
+    Parent ! { done, {I, self(), Key} },
+    keypad:stop(Pid).
+
+dispatch(_, []) -> ok;
+dispatch(Pid, [ Direction | Rest ]) ->
+    keypad:move(Pid, Direction),
+    dispatch(Pid, Rest).
+
+load_input(Filename) ->
+    {ok, File} = file:open(Filename, [read]),
+    lists:reverse(load_input(File, [])).
+
+load_input(File, List) ->
+    case file:read_line(File) of
+        {ok, Line} -> NewList = [ parse_line(Line) | List ],
+                      load_input(File, NewList);
+        eof -> List
+    end.
+
+parse_line(Line) -> lists:reverse(parse_line_inner(Line, [])).
+
+parse_line_inner("U" ++ Rest, List) -> parse_line_inner(Rest, [ up | List ]);
+parse_line_inner("R" ++ Rest, List) -> parse_line_inner(Rest, [ right | List ]);
+parse_line_inner("D" ++ Rest, List) -> parse_line_inner(Rest, [ down | List ]);
+parse_line_inner("L" ++ Rest, List) -> parse_line_inner(Rest, [ left | List ]);
+parse_line_inner("\n", List) -> List.
