@@ -6,20 +6,26 @@
 	 while (and (char>= c #\0) (char<= c #\9))
 	 collect (parse-integer (string c)))))
 
-;;; Solve the "captcha" provided in the specified list
+;;; Utility function to generate a range list
 
-(defun solve-captcha (input)
-  (getf (reduce (lambda (state next)
-	    (let ((sum (getf state :sum))
-		  (last (getf state :last)))
-	      (list
-	       :sum (if (eql next last) (+ sum next) sum)
-	       :last next)))
-	  input
-	  :initial-value (list :sum 0 :last (first (last input))))
-	:sum))
+(defun range (max)
+  (loop for n from 0 below max
+       collect n))
+
+;;; Solve the "captcha" provided in the specified list
+;;; This needs to support both part a and part b methods
+
+(defun solve-captcha (input offset)
+  (reduce (lambda (sum idx)
+	    (let ((cur (nth idx input))
+		  (target (nth (mod (+ idx offset) (list-length input)) input)))
+	      (if (eql cur target)
+		  (+ sum cur)
+		  sum)))
+	  (range (list-length input))
+	  :initial-value 0))
 
 ;;; Run the day 1a solution on the specified input file
 
 (defun run-day1a (filename)
-  (solve-captcha (parse-input filename)))
+  (solve-captcha (parse-input filename) 1))
