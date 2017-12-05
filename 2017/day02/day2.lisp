@@ -10,11 +10,20 @@
 	 (mapcar (lambda (x) (parse-integer x))
 		 (split-sequence:split-sequence #\Tab l)))))
 
-(defun row-checksum (row)
+(defun min-max-checksum (row)
   (- (reduce #'max row) (reduce #'min row)))
+
+(defun div-checksum (row)
+  (loop named outer for l in row do
+    (loop for r in row
+	when (and (/= l r) (eql (mod l r) 0))
+	do (return-from outer (/ l r)))))
 
 (defun checksum (checksum-fn table)
   (reduce #'+ (mapcar checksum-fn table)))
 
 (defun run-day2a (filename)
-  (checksum #'row-checksum (parse-input filename)))
+  (checksum #'min-max-checksum (parse-input filename)))
+
+(defun run-day2b (filename)
+  (checksum #'div-checksum (parse-input filename)))
