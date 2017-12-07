@@ -7,11 +7,8 @@
        collect
 	 (split-sequence:split-sequence #\Space l))))
 
-(defun count-string (item list)
-  (count-if (lambda (x) (equal x item)) list))
-
 (defun check-passphrase (phrase)
-  (member-if (lambda (x) (> (count-string x phrase) 1)) phrase))
+  (member-if (lambda (x) (> (count x phrase :test #'string=)) 1)) phrase))
 
 (defun run-day4a (filename)
   (count-if #'check-passphrase (parse-input filename)))
