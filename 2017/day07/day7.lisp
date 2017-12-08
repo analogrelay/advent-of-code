@@ -41,3 +41,17 @@
 		 (setf (getf (gethash child entries) :parent) k)))
 	     entries)
     entries))
+
+(defun dump-tree (tree)
+  (maphash (lambda (k v) (format t "~a => ~a~%" k v)) tree))
+
+(defun find-base-node (tree)
+  (let ((base-node nil))
+    (maphash (lambda (k v)
+	       (declare (ignore k))
+	       (when (not (getf v :parent)) (setf base-node v)))
+	     tree)
+    base-node))
+
+(defun run-day7a (filename)
+  (find-base-node (parse-input filename)))
