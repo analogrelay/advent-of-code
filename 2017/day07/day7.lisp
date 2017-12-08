@@ -1,5 +1,6 @@
 (ql:quickload "split-sequence")
 
+;;; Helper functions
 (defun split-seq (position list &optional (separator-length 0))
   (values (subseq list 0 position)
 	  (subseq list (+ position separator-length))))
@@ -10,6 +11,7 @@
 	(split-seq (search candidate seq) seq (length candidate))
 	(values seq nil))))
 
+;;; Parsers
 (defun parse-name-and-weight (val)
   (multiple-value-bind (name weight) (split-at " " val)
     (values name (parse-integer (string-trim '(#\( #\)) weight)))))
@@ -26,10 +28,16 @@
 	    (concatenate 'list base-list (list :children (parse-child-list children)))
 	    base-list)))))
 
-;;; Parse the input
 (defun parse-input (filename)
-  (with-open-file (in filename)
-    (let ((entries nil))
+  (let ((entries (make-hash-table :test #'equal)))
+    (with-open-file (in filename)
       (do ((line (read-line in nil) (read-line in nil)))
-	  (line entries)
-	(setf entries (cons entries (parse-entry line)))))))
+	  ((not line) entries)
+	(let ((entry (parse-entry line)))
+	  (setf (gethash (getf entry :name) entries) entry))))
+    ;; Link children to parents
+    (maphash (lambda (k v)
+	       (dolist (child (getf v :children))
+		 (setf (getf (gethash child entries) :parent) k)))
+	     entries)
+    entries))
