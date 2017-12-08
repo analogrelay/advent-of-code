@@ -21,11 +21,12 @@
 
 ;;; Rebalance the banks by finding the largest one and redistributing it's contents
 (defun rebalance (banks)
-  (let* ((target-bank (find-largest-bank banks))
-	 (amount (elt banks target-bank))
-	 (next-bank (mod (1+ target-bank) (length banks))))
-    (setf (elt banks target-bank) 0)
-    (distribute next-bank amount banks)))
+  (let ((banks (copy-seq banks)))
+    (let* ((target-bank (find-largest-bank banks))
+	   (amount (elt banks target-bank))
+	   (next-bank (mod (1+ target-bank) (length banks))))
+      (setf (elt banks target-bank) 0)
+      (distribute next-bank amount banks))))
 
 ;;; Bank equality function. Simple item-wise equality
 (defun bank= (l r)
@@ -35,7 +36,11 @@
 
 ;;; Calculate the number of rebalances needed to see a pattern that has been seen before
 (defun get-rebalance-count (bank)
-  (do ((seen-patterns nil (cons current-bank seen-patterns))
+  (do ((seen-patterns nil (cons (list current-bank count) seen-patterns))
        (current-bank bank (rebalance current-bank))
        (count 0 (1+ count)))
-      ((find current-bank seen-patterns :test #'bank=) count)))
+      ((find current-bank seen-patterns :test #'bank= :key #'first)
+       (list count (- count (cadr (find current-bank seen-patterns :test #'bank= :key #'first)))))))
+
+(defun run-day6 (filename)
+  (get-rebalance-count (parse-input filename)))
