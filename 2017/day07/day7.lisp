@@ -42,6 +42,14 @@
 	     entries)
     entries))
 
+;;; Accessors
+
+(defun name (node) (getf node :name))
+(defun weight (node) (getf node :weight))
+(defun children (node) (getf node :children))
+
+;;; More helpers
+
 (defun dump-tree (tree)
   (maphash (lambda (k v) (format t "~a => ~a~%" k v)) tree))
 
@@ -53,5 +61,33 @@
 	     tree)
     base-node))
 
+(defun find-children (node tree)
+  (let ((child-names (children node)))
+    (if child-names
+      (mapcar (lambda (x)
+		(gethash x tree)) child-names))))
+
+(defun get-total-weight (node tree)
+  ;; Using initial-value is tricky here because of the use of :key
+  ;; So we'll just add it after the reduction
+  (+ (weight node)
+     (reduce #'+ (find-children node tree) :key (lambda (x) (get-total-weight x tree)))))
+
+;;; Find the outlier of a list of nodes
+(defun find-outlier (items &key key)
+  (let ((max-val (reduce #'max items :key key))
+	(min-val (reduce #'min items :key key)))
+    (if (= (count max-val items :key key) 1)
+	max-val
+	min-val)))
+
+(defun get-unbalanced-node (base tree)
+  ;; Get child-nodes and their total weights
+  (flet ((get-total-weight (x) (get-total-weight x tree))
+	 (find-children (c) (find-children x tree)))
+    (let* ((child-nodes (find-children base))
+	   (child-weights (mapcar #'get-total-weight child-nodes)))
+  
+  
 (defun run-day7a (filename)
   (find-base-node (parse-input filename)))
