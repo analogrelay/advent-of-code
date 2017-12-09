@@ -77,16 +77,22 @@
 (defun find-outlier (items &key key)
   (let ((max-val (reduce #'max items :key key))
 	(min-val (reduce #'min items :key key)))
-    (if (= (count max-val items :key key) 1)
-	max-val
-	min-val)))
+    (if (= max-val min-val)
+	nil
+	(if (= (count max-val items :key key) 1)
+	    max-val
+	    min-val))))
 
 (defun get-unbalanced-node (base tree)
   ;; Get child-nodes and their total weights
   (flet ((get-total-weight (x) (get-total-weight x tree))
-	 (find-children (c) (find-children x tree)))
+	 (find-children (x) (find-children x tree)))
     (let* ((child-nodes (find-children base))
-	   (child-weights (mapcar #'get-total-weight child-nodes)))
+	   (child-weights (mapcar #'get-total-weight child-nodes))
+	   (outlier-weight (find-outlier child-weights))
+	   (outlier-pos (position outlier-weight child-weights))
+	   (outlier-node (nth outlier-pos child-nodes)))
+      outlier-node)))
   
   
 (defun run-day7a (filename)
