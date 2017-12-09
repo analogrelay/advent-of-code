@@ -36,10 +36,8 @@
 	 (list :type :garbage :value garbage-string)))
     ;; If we're in an escape
     (if in-escape
-	;; Just add the character and clear the in-escape flag
-	(progn
-	  (vector-push-extend c garbage-string)
-	  (setf in-escape nil))
+	;; Just skip the character and clear the in-escape flag
+	(setf in-escape nil)
 	;; Otherwise, if we see an escape
 	(if (eql c #\!)
 	    ;; Set the flag and ignore the character
