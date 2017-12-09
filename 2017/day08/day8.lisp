@@ -10,8 +10,14 @@
   (or (gethash name cpu) 0))
 
 (defun (setf register) (new-value name cpu)
-  ;(format t "~a <- ~a~%" name new-value)
+  ;; Update the "highest value" metaregister (".max") if necessary
+  (setf (gethash ".max" cpu) (max (register ".max" cpu) new-value))
   (setf (gethash name cpu) new-value))
+
+(defun get-registers (cpu)
+  (let ((regs nil))
+    (maphash (lambda (k v) (when (not (eql (elt k 0) #\.)) (push (list k v) regs))) cpu)
+    regs))
 
 (defun run-opcode (s l r)
   (cond ((equal s "inc") (+ l r))
@@ -22,7 +28,7 @@
   (cond ((equal x ">") (> l r))
 	((equal x "<") (< l r))
 	((equal x ">=") (>= l r))
-	((equal x "<=") (>= l r))
+	((equal x "<=") (<= l r))
 	((equal x "==") (= l r))
 	((equal x "!=") (/= l r))))
 
@@ -70,6 +76,5 @@
   (let ((compiled-program (compile-program (parse-program filename)))
 	(cpu (make-cpu)))
     (run-prog compiled-program cpu)
-    (let ((regs nil))
-      (maphash (lambda (k v) (push (list k v) regs)) cpu)
+    (let ((regs (get-registers cpu)))
       (reduce #'max regs :key #'cadr))))
