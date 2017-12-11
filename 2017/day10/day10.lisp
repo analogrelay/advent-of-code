@@ -22,7 +22,7 @@
     (if (>= end list-len)
 	(values (- end list-len)
 		list-len)
-	(values start end))))
+	(values 0 end))))
 
 ;;; Reverses the requested segment of a circular list
 (defun reverse-segment (seq start len)
@@ -42,15 +42,39 @@
 			 trailing-normal)))))))
 
 ;;; Calculate the hash
-(defun knot-hash (lengths &optional (key 256))
-  (let ((seq (range key))
-	(start 0)
+(defun knot-hash-round (key start skip-size seq)
+  (dolist (item key)
+    (setf seq (reverse-segment seq start item))
+    (setf start (mod (+ start item skip-size) (length seq)))
+    (incf skip-size))
+  (values seq start skip-size))
+
+(defun create-key (str)
+  (concatenate 'vector
+	       (map 'vector #'char-int str)
+	       (list 17 31 73 47 23)))
+
+(defun sparse-knot-hash (key seq)
+  (let ((start 0)
 	(skip-size 0))
-    (dolist (len lengths)
-      (setf seq (reverse-segment seq start len))
-      (setf start (mod (+ start len skip-size) key))
-      (incf skip-size))
-    (* (first seq) (second seq))))
+    (dotimes (i 64)
+      (multiple-value-bind (new-seq new-start new-skip-size) (knot-hash-round key start skip-size seq)
+	(setf seq new-seq
+	      start new-start
+	      skip-size new-skip-size))))
+  seq)
+
+(defun compact-block (seq block-index)
+  (let* ((start (* block-index 16))
+	 (end (+ start 16)))
+    (reduce #'logxor seq :start start :end end)))
+
+(defun compact-hash (hash)
+  (let ((compacted (make-array 16 :fill-pointer 0)))
+    (dotimes (i 16)
+      (vector-push (compact-block hash i) compacted))
+    compacted))
 
 (defun run-day10a (filename)
-  (knot-hash (parse-input filename)))
+  (let ((seq (knot-hash-round (parse-input filename) 0 0 (range 256))))
+    (* (first seq) (second seq))))
