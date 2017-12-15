@@ -29,3 +29,37 @@
 	
 (defun run-day14a (input)
   (count 1 (generate-memory input 128)))
+
+(defun get-offset (stride direction)
+  (case direction
+    (:n (- stride))
+    (:s stride)
+    (:e -1)
+    (:w 1)))
+
+(defun flood-clear (idx array stride)
+  (when (and (>= idx 0) (< idx (length array)) (= (elt array idx) 1))
+    (setf (elt array idx) 0)
+    (flood-clear (+ idx (get-offset stride :n)) array stride)
+    (flood-clear (+ idx (get-offset stride :e)) array stride)
+    (flood-clear (+ idx (get-offset stride :s)) array stride)
+    (flood-clear (+ idx (get-offset stride :w)) array stride)))
+
+(defun render-grid (grid stride)
+  (dotimes (row (/ (length grid) stride))
+    (dotimes (col stride)
+      (if (= (elt grid (+ (* row stride) col)) 1)
+	  (format t "#")
+	  (format t ".")))
+    (format t "~%")))
+
+(defun count-regions (array stride)
+  (do ((candidate (position 1 array) (position 1 array))
+       (count 0 (1+ count)))
+      ((not candidate) count)
+    (flood-clear candidate array stride)))
+
+(defun run-day14b (input)
+  (let ((mem (generate-memory input 128)))
+    (count-regions mem 128)
+    (render-grid mem 128)))
