@@ -20,6 +20,9 @@
 			      :initarg :depth
 			      :initform (error "The :depth parameter must be provided")
 			      :type 'integer)
+		       (direction :accessor direction
+				  :initform 1
+				  :type 'integer)
 		       (scan-position :accessor scan-position
 				      :initform 0 
 				      :type 'integer)))
@@ -47,6 +50,8 @@
 			 (total-severity :accessor total-severity
 					 :initform 0
 					 :type 'integer)
+			 (caught :accessor caught
+				 :initform nil)
 			 (player-position :accessor player-position
 					  :initform nil)))
 
@@ -86,25 +91,31 @@
 		       (input nil))
 		      ((not line) input)
 		    (push (parse-line line) input))))
-      (let ((last-layer (depth (first layers))))
+      (let ((last-layer (index (first layers))))
 	(make-instance 'game-board :layers (nreverse layers) :last-layer last-layer)))))
 
-(defgeneric step-component (component))
+(defgeneric step-component (component &key))
 
-(defmethod step-component ((component firewall))
-  (setf (scan-position component)
-	(let ((scan-pos (scan-position component)))
-	  (if scan-pos
-	      (mod (1+ (scan-position component)) (depth component))
-	      0)))
-  component)
+(defmethod step-component ((component firewall) &key)
+  (let ((scan-pos (scan-position component)))
+    ;; If we're at the bottom, moving down
+    (cond ((and (> (direction component) 0) (= scan-pos (1- (depth component))))
+	   ;; Change directions
+	   (setf (direction component) -1))
+	  ;; If we're at the top, moving up
+	  ((and (< (direction component) 0) (= scan-pos 0))
+	   ;; Change directions
+	   (setf (direction component) 1)))
+    ;; Apply the direction
+    (incf (scan-position component) (direction component))))
 
 (defun scanner-active (firewall) (= 0 (or (scan-position firewall) -1)))
 
-(defmethod step-component ((component game-board))
+(defmethod step-component ((component game-board) &key skip-player)
   ;; Move the player
-  (let ((pos (player-position component)))
-    (setf (player-position component) (1+ (or pos -1))))
+  (unless skip-player
+    (let ((pos (player-position component)))
+      (setf (player-position component) (1+ (or pos -1)))))
   ;; Scan all the firewalls
   (let ((pos (player-position component)))
     (dolist (layer (layers component))
@@ -112,6 +123,8 @@
       ;; AND the scanner is active
       (when (and pos (= pos (index layer)) (scanner-active layer))
 	;; Then they are caught
+	;;(format t "caught in ~a~%" (index layer))
+	(setf (caught component) t)
 	(incf (total-severity component) (severity layer)))
       (step-component layer))
     component))
@@ -119,9 +132,48 @@
 (defgeneric reset-component (component))
 
 (defmethod reset-component ((component firewall))
-  (setf (scan-position component) nil))
+  (setf (scan-position component) 0))
 
 (defmethod reset-component ((component game-board))
   (setf (player-position component) nil)
+  (setf (total-severity component) 0)
+  (setf (caught component) nil)
   (dolist (layer (layers component))
     (reset-component layer)))
+
+(defun run-game (board &key delay)
+  (dotimes (i (or delay 0))
+    (step-component board :skip-player t))
+  (do ()
+      ((> (or (player-position board) -1) (last-layer board)) board)
+    (step-component board)))
+
+(defun run-day13a (filename)
+  (total-severity (run-game (parse-input filename))))
+
+;;; Determine the position of a firewall at the specified time-slice
+(defun position-at-time (firewall time-slice)
+  ;;; Determine the position
+  (let* ((depth (depth firewall))
+	 (x (* (1- depth) 2))
+	 (pos (mod time-slice x)))
+    ;; Pos is actually not the position, we have to figure out if it's on the upswing
+    ;; or the downswing
+    (if (> pos (1- depth))
+	(- x pos)
+	pos)))
+
+(defun would-be-caught (board start-time)
+  (dolist (layer (layers board))
+    ;; Get the position at this layer
+    (let ((firewall-pos (position-at-time layer (+ start-time (index layer)))))
+      (when (= firewall-pos 0)
+	(return-from would-be-caught t)))))
+
+(defun run-day13b (filename &key (patience 10000000))
+  (let ((board (parse-input filename)))
+    (dotimes (i patience) ; Patience value just to prevent infinite loop
+      (when (not (would-be-caught board i))
+	(return-from run-day13b i)))))
+
+  
