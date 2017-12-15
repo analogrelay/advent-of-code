@@ -1,9 +1,8 @@
 (ql:quickload "split-sequence")
 
 ;;; Parsing again!
-(defun parse-input (filename)
-  (with-open-file (in filename)
-    (mapcar 'parse-integer (split-sequence:split-sequence #\, (read-line in nil)))))
+(defun parse-input (str)
+    (mapcar 'parse-integer (split-sequence:split-sequence #\, str)))
 
 ;;; Utility function to generate a range list
 (defun range (max) (loop for n from 0 below max collect n))
@@ -50,7 +49,7 @@
   (values seq start skip-size))
 
 (defun create-key (str)
-  (concatenate 'vector
+  (concatenate 'list
 	       (map 'vector #'char-int str)
 	       (list 17 31 73 47 23)))
 
@@ -75,6 +74,17 @@
       (vector-push (compact-block hash i) compacted))
     compacted))
 
+(defun to-hex-str (seq)
+  (let ((str ""))
+    (dotimes (i (length seq))
+      (setf str (concatenate 'string str (format nil "~2,'0X" (elt seq i)))))
+    str))
+
+(defun knot-hash (str)
+  (let ((key (create-key str)))
+    (compact-hash (sparse-knot-hash key (range 256)))))
+
 (defun run-day10a (filename)
-  (let ((seq (knot-hash-round (parse-input filename) 0 0 (range 256))))
-    (* (first seq) (second seq))))
+  (with-open-file (in filename)
+    (let ((seq (knot-hash-round (parse-input (read-line in nil)) 0 0 (range 256))))
+      (* (first seq) (second seq)))))
