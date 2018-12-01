@@ -1,10 +1,7 @@
 open System
 open VibrantCode.AdventOfCode
 
-[<EntryPoint>]
-let main argv =
-    let data = argv.[0] |> AdventHelpers.loadLines |> Seq.map int
-
+let run data = 
     data
     |> Seq.sum
     |> printfn "Part 1: %d"
@@ -32,5 +29,12 @@ let main argv =
         | Some(l) -> if Set.contains l set then Some(l) else None
     )
     |> printfn "Part 2: %A"
+
+[<EntryPoint>]
+let main argv =
+    argv.[0]
+    |> AdventHelpers.loadLines
+    |> Seq.map int
+    |> run
 
     0
