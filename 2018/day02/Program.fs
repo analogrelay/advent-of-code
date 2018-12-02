@@ -1,14 +1,17 @@
 open System
 open VibrantCode.AdventOfCode
 
+let apply2 op (x, y) = op x y
+
 let hasRepeat (target: int) (str: string) =
     str
     |> Seq.countBy id
-    |> Seq.exists (fun (chr, count) -> count = target)
-
+    |> Seq.map snd
+    |> Seq.exists ((=) target)
+    
 let diffStrings (left: string) (right: string) =
     Seq.zip left right
-    |> Seq.map (fun (x, y) -> x <> y)
+    |> Seq.map (apply2 (<>))
 
 let part1 data =
     let getCounts (twos, threes) boxId =
@@ -16,13 +19,15 @@ let part1 data =
         let newThrees = if hasRepeat 3 boxId then threes + 1 else threes
         (newTwos, newThrees)
 
-    let (twos, threes) = data |> Seq.fold getCounts (0, 0)
-    twos * threes |> printfn "Part 1: %d"
+    data
+    |> Seq.fold getCounts (0, 0)
+    |> (apply2 (*))
+    |> printfn "Part 1: %d"
 
 let buildString diff (boxId: string) =
     Seq.zip diff boxId
-    |> Seq.filter (fun (x, _) -> not x)
-    |> Seq.map (fun (_, y) -> y.ToString())
+    |> Seq.filter (fst >> not)
+    |> Seq.map (snd >> string)
     |> String.concat ""
 
 let part2 data =
@@ -33,8 +38,7 @@ let part2 data =
         data
         |> Seq.tryPick (fun otherId ->
             let diff = diffStrings boxId otherId
-            let count = diff |> Seq.filter id |> Seq.length
-            if count = 1 then
+            if diff |> Seq.filter id |> Seq.length = 1 then
                 Some(buildString diff boxId)
             else
                 None
