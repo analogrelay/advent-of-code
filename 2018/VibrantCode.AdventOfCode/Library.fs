@@ -8,4 +8,3 @@ module AdventHelpers =
         while not stream.EndOfStream do
             yield stream.ReadLine()
     }
-
