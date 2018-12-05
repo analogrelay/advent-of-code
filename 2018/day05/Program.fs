@@ -1,42 +1,33 @@
 open System
 open VibrantCode.AdventOfCode.AdventHelpers
 
-let charEqualIgnoreCase (l: char) (r: char) = ((Char.ToLower l) = (Char.ToLower r))
-let areReactive (l: char) (r: char) = l <> r && (charEqualIgnoreCase l r)
+let charMatch (l: char) (r: char) = ((Char.ToLower l) = (Char.ToLower r))
+let areReactive (l: char) (r: char) = l <> r && (charMatch l r)
 
-let rec countNonReactiveWorker (count: int) (lookbehind: char list) (list: char list) = 
-    // We maintain two lists, the main list and the lookbehind list
-    // The lookbehind list is in _REVERSE_ order (so the head of the list is the
-    // immediate previous item)
+let simplify polymer =
+    let folder (chr: char) (polymer: char list) = 
+        match (polymer, chr) with
+        // Check if the front of the polymer matches the current char
+        | (x :: xs, y) when areReactive x y -> xs
+        | (xs, y) -> y :: xs
+    Seq.foldBack folder polymer [] |> Seq.ofList
 
-    match (lookbehind, list) with
-    // There's a match!
-    // Deduct one from the count and continue
-    | (l :: lbtail, r :: tail) when areReactive l r -> countNonReactiveWorker (count - 1) lbtail tail
-
-    // No matches, move forward
-    | (lb, head :: tail) -> countNonReactiveWorker (count + 1) (head :: lb) tail
-
-    // Empty list, end case.
-    | (_, []) -> count 
-
-let countNonReactive (data: char list) =
-    countNonReactiveWorker 0 [] data
-
-let removeAllInstances (chr: char) (data: char list) =
+let removeAllInstances (chr: char) (data: char seq) =
     // f >> g ==> g(f(x))
     // so this wraps the charEqualIgnoreCase result in a call to "not", to negate it.
-    data |> List.filter ((charEqualIgnoreCase chr) >> not)
+    data |> Seq.filter ((charMatch chr) >> not)
 
 let run (data: char list) =
-    data
-    |> countNonReactive
+    let simplified = simplify data
+
+    simplified
+    |> Seq.length
     |> printfn "Part 1: %d"
 
     seq { 'a'..'z' }
-    |> Seq.map (fun x -> (x, data))
+    |> Seq.map (fun x -> (x, simplified))
     |> Seq.map (fun (chr, data) -> (chr, removeAllInstances chr data))
-    |> Seq.map (applyToSnd countNonReactive)
+    |> Seq.map (fun (chr, data) -> (chr, simplify data |> Seq.length))
     |> Seq.minBy snd
     |> snd
     |> printfn "Part 2: %d"

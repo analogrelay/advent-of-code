@@ -6,10 +6,10 @@ let hasRepeat (target: int) (str: string) =
     |> Seq.countBy id
     |> Seq.map snd
     |> Seq.exists ((=) target)
-    
+
 let diffStrings (left: string) (right: string) =
     Seq.zip left right
-    |> Seq.map (apply2 (<>))
+    |> Seq.map ((<||) (<>))
 
 let part1 data =
     let getCounts (twos, threes) boxId =
@@ -19,7 +19,7 @@ let part1 data =
 
     data
     |> Seq.fold getCounts (0, 0)
-    |> (apply2 (*))
+    |> ((<||) (*))
     |> printfn "Part 1: %d"
 
 let buildString diff (boxId: string) =
