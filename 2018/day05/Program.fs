@@ -1,7 +1,5 @@
 open System
 open VibrantCode.AdventOfCode.AdventHelpers
-open System
-open System
 
 let charEqualIgnoreCase (l: char) (r: char) = ((Char.ToLower l) = (Char.ToLower r))
 let areReactive (l: char) (r: char) = l <> r && (charEqualIgnoreCase l r)
