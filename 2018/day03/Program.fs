@@ -1,5 +1,5 @@
 open System
-open VibrantCode.AdventOfCode
+open VibrantCode.AdventOfCode.AdventHelpers
 open System.Diagnostics
 open System.Data
 
@@ -107,7 +107,7 @@ let run (data: Claim seq) =
 [<EntryPoint>]
 let main argv =
     argv.[0]
-    |> AdventHelpers.loadLines
+    |> loadLines
     |> Seq.choose Claim.tryParse
     |> run
 

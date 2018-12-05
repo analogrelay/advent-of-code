@@ -1,7 +1,5 @@
 open System
-open VibrantCode.AdventOfCode
-
-let apply2 op (x, y) = op x y
+open VibrantCode.AdventOfCode.AdventHelpers
 
 let hasRepeat (target: int) (str: string) =
     str
@@ -53,6 +51,6 @@ let run data =
 [<EntryPoint>]
 let main argv =
     argv.[0]
-    |> AdventHelpers.loadLines
+    |> loadLines
     |> run
     0

@@ -1,10 +1,5 @@
 open System
-
-open System
-open VibrantCode.AdventOfCode
-open System.Text.RegularExpressions
-open System.ComponentModel.DataAnnotations
-open System.Linq
+open VibrantCode.AdventOfCode.AdventHelpers
 
 let parseGuardId (input: string) =
     let hashIdx = input.IndexOf '#'
@@ -163,7 +158,7 @@ let run (timeline: Timeline) =
 [<EntryPoint>]
 let main argv =
     argv.[0]
-    |> AdventHelpers.loadLines
+    |> loadLines
     |> Timeline.parse
     |> run
 
