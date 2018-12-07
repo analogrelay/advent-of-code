@@ -2,11 +2,11 @@
   "profiles": {
     "day06": {
       "commandName": "Project",
-      "commandLineArgs": "$(MSBuildProjectDirectory)/input.txt"
+      "commandLineArgs": "$(MSBuildProjectDirectory)/input.txt 10000"
     },
     "day06 - test": {
       "commandName": "Project",
-      "commandLineArgs": "$(MSBuildProjectDirectory)/test.txt"
+      "commandLineArgs": "$(MSBuildProjectDirectory)/test.txt 32"
     }
   }
 }

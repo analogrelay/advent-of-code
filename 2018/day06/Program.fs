@@ -96,7 +96,12 @@ let printGrid (grid: GridState[,]) =
             grid.[x,y] |> getGridStr |> printf "%s"
         printfn ""
 
-let run (data: Coord list) = 
+let computeTotalDistance (data: Coord list) (x, y) =
+    data
+    |> Seq.map (fun coord -> manhattenDistance (coord.X, coord.Y) (x, y))
+    |> Seq.sum
+
+let run (threshold: int) (data: Coord list) = 
     data |> List.length |> printfn "Coords: %d"
     let grid = buildGrid data
 
@@ -117,6 +122,7 @@ let run (data: Coord list) =
     // Compute the area for each coord
     grid
     |> seqOfArray2D
+    |> Seq.map snd
     |> Seq.groupBy getCoordId
     |> Seq.choose (fun (coord, cells) ->
         match coord with
@@ -127,6 +133,15 @@ let run (data: Coord list) =
     |> Seq.maxBy snd
     ||> printfn "Part 1: Point %c (Size: %d)"
 
+    // Compute Part 2 solution
+    grid
+    |> seqOfArray2D
+    |> Seq.map fst
+    |> Seq.map (computeTotalDistance data)
+    |> Seq.filter (fun x -> x < threshold)
+    |> Seq.length
+    |> printfn "Part 2: %d"
+
 [<EntryPoint>]
 let main argv =
     argv.[0]
@@ -134,6 +149,6 @@ let main argv =
     |> Seq.map (split2 ',')
     |> Seq.mapi Coord.create
     |> List.ofSeq
-    |> run
+    |> run (int argv.[1])
 
     0

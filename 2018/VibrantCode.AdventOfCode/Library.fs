@@ -18,7 +18,7 @@ module AdventHelpers =
         seq {
             for i in base1..end1 do
                 for j in base2..end2 do
-                    yield arr.[i, j]
+                    yield ((i, j), arr.[i, j])
         }
 
     let loadString (file: string) = File.ReadAllText(file)
