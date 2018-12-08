@@ -13,6 +13,17 @@ type TreeNode(name: string, children: TreeNode list, metadata: int list) =
         let childMetdata = children |> List.sumBy (fun x -> x.TotalMetadata)
         myMetadata + childMetdata
 
+    member _x.Score =
+        if List.isEmpty children then
+            metadata |> List.sum
+        else
+            metadata
+            |> List.filter ((<>) 0)
+            |> List.map (fun idx -> idx - 1)
+            |> List.choose (fun idx -> children |> List.tryItem idx)
+            |> List.sumBy (fun child -> child.Score)
+
+
 let rec buildTree (counter: int) (values: int list) =
     match values with
     | numChildren :: numMetadata :: rest -> 
@@ -47,6 +58,9 @@ let run (root: TreeNode) =
 
     root.TotalMetadata
     |> printfn "Part 1: %d"
+
+    root.Score
+    |> printfn "Part 2: %d"
 
 [<EntryPoint>]
 let main argv =
