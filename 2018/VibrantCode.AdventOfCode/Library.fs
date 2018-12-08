@@ -23,6 +23,9 @@ module AdventHelpers =
 
     let loadString (file: string) = File.ReadAllText(file)
 
+    let loadSpaceDelimited (file: string) =
+        (loadString file).Split(' ') |> Seq.ofArray
+
     let loadLines (file: string) = seq {
         use stream = new StreamReader(file)
         while not stream.EndOfStream do
