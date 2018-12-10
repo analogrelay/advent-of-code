@@ -3,6 +3,16 @@ open VibrantCode.AdventOfCode
 open System.Text.RegularExpressions
 open System.Threading
 
+// We use the following heuristic to detect when the lights align to form a "message"
+// 1. At each tick, compute the bounding box for all points
+// 2. Compute the area of that box
+// 3. If the area is smaller than the previous tick, keep going
+// 4. If the area is _larger_ than the previous tick, the previous tick contains the message
+//
+// This is based on the idea that a message will be a text string ("HI") and will be a very
+// compact set of points. The tick immediately following the one in which the message appears
+// will cause the lights to drift apart and the area will start increasing again.
+
 // Active pattern for matching using a regular expression.
 // Produces a list of groups yielded by the regex, skipping the first one
 let (|Regex|_|) (pattern: string) (input: string) =
