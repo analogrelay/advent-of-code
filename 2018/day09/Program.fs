@@ -4,6 +4,16 @@ open VibrantCode.AdventOfCode.AdventHelpers
 type RingNode<'T> = { mutable prev: RingNode<'T> option; mutable next: RingNode<'T> option; data: 'T } with
     member this.Prev = Option.get this.prev
     member this.Next = Option.get this.next
+    member this.Value = this.data
+    member this.Enumerate =
+        seq {
+            yield this.Value
+            let mutable nod = this.Next
+            while not (LanguagePrimitives.PhysicalEquality nod this) do
+                yield nod.Value
+                nod <- nod.Next
+        }
+
     member this.Seek index =
         match index with
         | 0 -> this
@@ -21,66 +31,43 @@ type RingNode<'T> = { mutable prev: RingNode<'T> option; mutable next: RingNode<
         this.Prev.next <- this.next
         this.Next.prev <- this.prev
 
-    static member create item =
+    static member create (item: 'T) =
         let newNode = { prev = None; next = None; data = item }
         newNode.prev <- Some(newNode)
         newNode.next <- Some(newNode)
         newNode
 
-let insert (index: int) item list =
-    if index = (List.length list) then
-        list @ [item]
-    else
-        // Split the list at the index
-        let (left, right) = List.splitAt index list
-
-        // Stich the list back together
-        left @ (item :: right)
-
-let remove (index: int) list =
-    match List.splitAt index list with
-    | (left, removed :: right) -> (removed, left @ right)
-    | (left, []) -> raise (new Exception("Attempted to remove item that does not exist!"))
-
-type Board(marbles: int list, currentIndex: int) =
-    member _x.Marbles = marbles
-    member _x.CurrentIndex = currentIndex
-
+type Board(head: RingNode<int>, currentMarble: RingNode<int>) =
     member _x.PlaceMarble (marble: int) =
         // Check if this is the next scoring marble
         if (marble % 23) = 0 then
-            // Remove the marble 7 places counter-clockwise
-            let removeOffset = (currentIndex - 7) % marbles.Length |> abs
-            let (removed, marbles) = marbles |> remove removeOffset
-            (removed + marble, Board(marbles, removeOffset))
-        else
-            // Figure out where to place the marble
-            match marbles with
-            | [ one ] -> (0, Board([ one; marble ], 1))
-            | x ->
-                // Compute the offset for the new marble
-                let offset =
-                    match (currentIndex + 2) % marbles.Length with
-                    // If the destination is offset '0', actually insert it at the end
-                    | 0 -> marbles.Length
-                    | x -> x
+            // Find the marble 7 spaces counter-clockwise
+            let toRemove = currentMarble.Seek -7
+            let next = toRemove.Next
 
-                // Insert the new marble at that offset and return a new board
-                (0, Board(marbles |> insert offset marble, offset))
+            // Detach it and score it
+            toRemove.Detach
+            let result = int64(marble) + int64(toRemove.Value)
+            (result, Board(head, next))
+        else
+            // Seek forward 1 and then insert the marble
+            let dest = currentMarble.Seek 1
+            let newCurrent = dest.Insert marble
+            (int64(0), Board(head, newCurrent))
 
     member _x.Render (player: int option) =
         match player with
         | None -> printf "[-] "
         | Some(p) -> printf "[%d] " p
 
-        for (idx, marble) in (List.indexed marbles) do
-            if idx = currentIndex then
+        for marble in head.Enumerate do
+            if marble = currentMarble.Value then
                 printf "(%2d)" marble
             else
                 printf " %2d " marble
         printfn ""   
 
-    member this.PlayRound (player: int) (scores: int array) (marble: int) (totalMarbles: int) =
+    member this.PlayRound (player: int) (scores: int64 array) (marble: int) (totalMarbles: int) =
         if marble > totalMarbles then
             ()
         else
@@ -88,8 +75,8 @@ type Board(marbles: int list, currentIndex: int) =
             let (score, board) = this.PlaceMarble marble
 
             // Update score
-            if score > 0 then
-                printfn "[Marble: %05d/%05d] Player %d scores: %d" marble totalMarbles player score
+            //if score > 0 then
+            //    printfn "[Marble: %05d/%05d] Player %d scores: %d" marble totalMarbles player score
             let newScore = scores.[player] + score
             scores.[player] <- newScore
 
@@ -99,9 +86,11 @@ type Board(marbles: int list, currentIndex: int) =
             // Play the next marble
             board.PlayRound ((player + 1) % scores.Length) scores (marble + 1) totalMarbles
 
-    static member create = Board([0], 0)
+    static member create =
+        let node = RingNode.create 0
+        Board(node, node)
 
-let run (players: int) (marbles: int) = 
+let run (part: int) (players: int) (marbles: int) = 
     let board = Board.create
 
     let scores = Array.zeroCreate players
@@ -109,13 +98,14 @@ let run (players: int) (marbles: int) =
     //board.Render None
     board.PlayRound 0 scores 1 marbles
 
-    scores |> Array.max |> printfn "Part 1: %d"
+    printfn "Part %d: %d" part (Array.max scores)
 
 [<EntryPoint>]
 let main argv =
     let players = argv.[1] |> int
     let marbles = argv.[2] |> int
 
-    run players marbles
+    run 1 players marbles
+    run 2 players (marbles * 100)
 
     0
