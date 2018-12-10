@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "day09": {
+      "commandName": "Project",
+      "commandLineArgs": "$(MSBuildProjectDirectory)/input.txt 463 71787"
+    },
+    "day09 - test": {
+      "commandName": "Project",
+      "commandLineArgs": "$(MSBuildProjectDirectory)/test.txt 9 25"
+    }
+  }
+}
