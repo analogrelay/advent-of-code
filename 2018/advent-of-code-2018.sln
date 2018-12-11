@@ -3,31 +3,34 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "day01", "day01\day01.fsproj", "{2306E10E-61F3-4EAB-964F-890D02BDD8B0}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "day01", "day01\day01.fsproj", "{2306E10E-61F3-4EAB-964F-890D02BDD8B0}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "VibrantCode.AdventOfCode", "VibrantCode.AdventOfCode\VibrantCode.AdventOfCode.fsproj", "{F0C3D557-FEC9-4481-94A1-E997E7C2D0B3}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "VibrantCode.AdventOfCode", "VibrantCode.AdventOfCode\VibrantCode.AdventOfCode.fsproj", "{F0C3D557-FEC9-4481-94A1-E997E7C2D0B3}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "day02", "day02\day02.fsproj", "{16290D44-31E4-418F-9B53-33922F86B4D0}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "day02", "day02\day02.fsproj", "{16290D44-31E4-418F-9B53-33922F86B4D0}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "day03", "day03\day03.fsproj", "{EDC1F6B7-7468-414C-941B-30299402AC4D}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "day03", "day03\day03.fsproj", "{EDC1F6B7-7468-414C-941B-30299402AC4D}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "day04", "day04\day04.fsproj", "{25D667D4-91A9-42A8-A03D-88EE97498433}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "day04", "day04\day04.fsproj", "{25D667D4-91A9-42A8-A03D-88EE97498433}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "day05", "day05\day05.fsproj", "{1E5EE3C5-D959-4746-AF36-10C48C4A9B3A}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "day05", "day05\day05.fsproj", "{1E5EE3C5-D959-4746-AF36-10C48C4A9B3A}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "day06", "day06\day06.fsproj", "{CA04A375-8D0A-434D-AB81-85F1EB797C91}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "day06", "day06\day06.fsproj", "{CA04A375-8D0A-434D-AB81-85F1EB797C91}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "day07", "day07\day07.fsproj", "{C2734A1C-33EE-477E-9843-B5769D6DA69F}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "day07", "day07\day07.fsproj", "{C2734A1C-33EE-477E-9843-B5769D6DA69F}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "day08", "day08\day08.fsproj", "{E1AA72E9-0E3A-4713-87F5-65C3C8D131B6}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "day08", "day08\day08.fsproj", "{E1AA72E9-0E3A-4713-87F5-65C3C8D131B6}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "day09", "day09\day09.fsproj", "{9729965C-5CC2-4F07-8EBD-7EF43962CCE7}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "day09", "day09\day09.fsproj", "{9729965C-5CC2-4F07-8EBD-7EF43962CCE7}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "day10", "day10\day10.fsproj", "{54BFBD6C-DA11-44A8-B509-125845AE32AA}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "day10", "day10\day10.fsproj", "{54BFBD6C-DA11-44A8-B509-125845AE32AA}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "day11", "day11\day11.fsproj", "{32D55E57-7CF4-4E9D-BC26-FF3A5F3A2EC1}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "day11", "day11\day11.fsproj", "{32D55E57-7CF4-4E9D-BC26-FF3A5F3A2EC1}"
 EndProject
 Global
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
@@ -35,9 +38,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2306E10E-61F3-4EAB-964F-890D02BDD8B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -184,5 +184,11 @@ Global
 		{32D55E57-7CF4-4E9D-BC26-FF3A5F3A2EC1}.Release|x64.Build.0 = Release|Any CPU
 		{32D55E57-7CF4-4E9D-BC26-FF3A5F3A2EC1}.Release|x86.ActiveCfg = Release|Any CPU
 		{32D55E57-7CF4-4E9D-BC26-FF3A5F3A2EC1}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CB1EE465-B0D1-4D93-B6D7-DD9F8812F6AE}
 	EndGlobalSection
 EndGlobal
