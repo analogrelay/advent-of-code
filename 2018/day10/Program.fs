@@ -1,7 +1,4 @@
-open System
-open VibrantCode.AdventOfCode
-open System.Text.RegularExpressions
-open System.Threading
+open VibrantCode.AdventOfCode.AdventHelpers
 
 // We use the following heuristic to detect when the lights align to form a "message"
 // 1. At each tick, compute the bounding box for all points
@@ -12,15 +9,6 @@ open System.Threading
 // This is based on the idea that a message will be a text string ("HI") and will be a very
 // compact set of points. The tick immediately following the one in which the message appears
 // will cause the lights to drift apart and the area will start increasing again.
-
-// Active pattern for matching using a regular expression.
-// Produces a list of groups yielded by the regex, skipping the first one
-let (|Regex|_|) (pattern: string) (input: string) =
-    let matches = Regex.Match(input, pattern)
-    if matches.Success then
-        Some(matches.Groups |> Seq.map (fun g -> g.Value) |> Seq.skip 1 |> List.ofSeq)
-    else
-        None
 
 [<StructuredFormatDisplay("{X},{Y}")>]
 type Point(x: int, y: int) =
@@ -127,7 +115,7 @@ let run (data: Light list) =
 [<EntryPoint>]
 let main argv =
     argv.[0]
-    |> AdventHelpers.loadLines
+    |> loadLines
     |> Seq.choose Light.tryParse
     |> List.ofSeq
     |> run

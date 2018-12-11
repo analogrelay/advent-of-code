@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "day11": {
+      "commandName": "Project",
+      "commandLineArgs": "9995"
+    },
+    "day11 - test": {
+      "commandName": "Project",
+      "commandLineArgs": "18"
+    }
+  }
+}

@@ -28,7 +28,7 @@ try {
 
     $ProgramFsContent = @"
 open System
-open VibrantCode.AdventOfCode
+open VibrantCode.AdventOfCode.AdventHelpers
 
 let run data = 
     raise (new NotImplementedException())
@@ -36,7 +36,7 @@ let run data =
 [<EntryPoint>]
 let main argv =
     argv.[0]
-    |> AdventHelpers.loadLines
+    |> loadLines
     |> Seq.map int
     |> run
 

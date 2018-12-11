@@ -1,7 +1,18 @@
 namespace VibrantCode.AdventOfCode
 
+open System.Text.RegularExpressions
+
 module AdventHelpers =
     open System.IO
+
+    // Active pattern for matching using a regular expression.
+    // Produces a list of groups yielded by the regex, skipping the first one
+    let (|Regex|_|) (pattern: string) (input: string) =
+        let matches = Regex.Match(input, pattern)
+        if matches.Success then
+            Some([ for g in matches.Groups do yield g.Value ] |> List.skip 1)
+        else
+            None
 
     let pairwiseApply func (first, second) =
         (func first, func second)
