@@ -3,12 +3,19 @@ import kotlin.system.exitProcess
 import java.io.File
 
 fun main(args: Array<String>) {
-    if (args.size < 1) {
-        System.err.println("Missing required argument: input file")
-        exitProcess(1)
+    val inputFile = if (args.size < 1) {
+        System.err.println("Input file not selected. Choosing 'input.txt' in the current directory.")
+        "input.txt"
+    } else {
+        args[0]
     }
 
-    val results = File(args[0]).readLines().map {
+    val inputLines = File(inputFile).readLines()
+    solve(inputLines)
+}
+
+fun solve(input: List<String>) {
+    val results = input.map {
         val mass = Integer.parseInt(it, 10)
         val fuelRequired = computeFuel(mass)
 

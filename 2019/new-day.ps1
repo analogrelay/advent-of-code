@@ -18,6 +18,7 @@ $DayDirName = "day$($DayNumber.ToString("00"))"
 $DayDir = Join-Path $PSScriptRoot $DayDirName
 if (!(Test-Path $DayDir)) {
   New-Item -ItemType Directory $DayDir
+  Copy-Item "$PSScriptRoot\main.kt.template" (Join-Path $DayDir "main.kt")
   $InputFilePath = Join-Path $DayDir "input.txt"
   $TestFilePath = Join-Path $DayDir "test.txt"
   "" | Out-File $InputFilePath

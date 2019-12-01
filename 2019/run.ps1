@@ -1,15 +1,31 @@
-$Source = Convert-Path (Get-Location)
+param([Parameter(Mandatory = $false, Position = 0)][string]$SourceDir)
 
-$Name = Split-Path -Leaf $Source
+if (!$SourceDir) {
+    $SourceDir = Get-Location
+}
+$SourceDir = Convert-Path $SourceDir
 
-$OutputDir = Join-Path $Source "build"
+$Name = Split-Path -Leaf $SourceDir
+
+$OutputDir = Join-Path $SourceDir "build"
 if (!(Test-Path $OutputDir)) {
     New-Item -ItemType Directory $OutputDir | Out-Null
 }
 
 $OutputJar = Join-Path $OutputDir "$Name.jar"
 
-$InputFile = Join-Path $Source "main.kt"
+$InputFile = Join-Path $SourceDir "main.kt"
 
+Write-Host -ForegroundColor Green "Building..."
 kotlinc $InputFile -include-runtime -d $OutputJar
-java -jar $OutputJar @args
+if ($LASTEXITCODE -ne 0) {
+    throw "Build Failed"
+}
+Write-Host -ForegroundColor Green "Running..."
+
+Push-Location $SourceDir
+try {
+    java -jar $OutputJar @args
+} finally {
+    Pop-Location
+}
