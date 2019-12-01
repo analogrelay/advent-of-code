@@ -8,10 +8,14 @@ fun main(args: Array<String>) {
         args[0]
     }
 
-    val inputLines = File(inputFile).readLines()
-    solve(inputLines)
+    solve(File(inputFile).readLines().map(::parseLine))
 }
 
-fun solve(input: List<String>) {
-    println("TODO: Solve!")
+fun parseLine(input: String): Int {
+    // TODO: Replace with other parsing logic as needed
+    return input.toInt()
+} 
+
+fun solve(input: List<Int>) {
+    println("TODO: Solve the puzzle!")
 }

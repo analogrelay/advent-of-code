@@ -1,5 +1,3 @@
-import kotlin.system.exitProcess
-
 import java.io.File
 
 fun main(args: Array<String>) {
@@ -10,32 +8,29 @@ fun main(args: Array<String>) {
         args[0]
     }
 
-    val inputLines = File(inputFile).readLines()
-    solve(inputLines)
+    solve(File(inputFile).readLines().map(::parseLine))
 }
 
-fun solve(input: List<String>) {
-    val results = input.map {
-        val mass = Integer.parseInt(it, 10)
-        val fuelRequired = computeFuel(mass)
+fun parseLine(input: String): Int {
+    return input.toInt()
+} 
 
-        // Now calculate extra fuel required for that fuel
-        var extraFuel = 0
-        var remainingMass = fuelRequired
-        while (remainingMass > 0) {
-            extraFuel += remainingMass
-            remainingMass = computeFuel(remainingMass)
-        }
-        Pair(fuelRequired, extraFuel)
-    }
-
-    val part1Result = results.map { it.first }.sum()
+fun solve(input: List<Int>) {
+    val part1Result = input.map(::computeFuel).sum()
     println("[Part 1] Result: $part1Result");
 
-    var part2Result = results.map { it.second }.sum()
+    var part2Result = input.map(::computeAllFuel).sum()
     println("[Part 2] Result: $part2Result");
 }
 
-fun computeFuel(mass: Int): Int {
-    return Math.floor(mass.toDouble() / 3.0).toInt() - 2
+fun computeFuel(mass: Int) = Math.floor(mass.toDouble() / 3.0).toInt() - 2
+
+fun computeAllFuel(currentMass: Int) = computeAllFuel(currentMass, 0)
+tailrec fun computeAllFuel(currentMass: Int, fuelTotal: Int = 0): Int {
+    val fuelMass = computeFuel(currentMass)
+    if (fuelMass <= 0) {
+        return fuelTotal
+    } else {
+        return computeAllFuel(fuelMass, fuelTotal + fuelMass)
+    }
 }
