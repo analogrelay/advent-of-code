@@ -4,8 +4,9 @@ import java.io.File
 
 fun main(args: Array<String>) {
     val inputFile = if (args.size < 1) {
-        System.err.println("Input file not selected. Choosing 'input.txt' in the current directory.")
-        "input.txt"
+        System.err.println("Usage: adventofcode day01 <INPUT FILE>")
+        System.exit(1)
+        throw Exception("Whoop");
     } else {
         args[0]
     }

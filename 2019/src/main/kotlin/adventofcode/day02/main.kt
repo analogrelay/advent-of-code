@@ -11,29 +11,30 @@ fun main(args: Array<String>) {
         arguments = arguments.filterNot { it == "--trace" }
     }
 
-    val fixError = arguments.contains("--fix-error")
-    if (fixError) {
-        arguments = arguments.filterNot { it == "--fix-error" }
+    val enable1202 = arguments.contains("--enable-1202")
+    if (enable1202) {
+        arguments = arguments.filterNot { it == "--enable-1202" }
     }
 
     val inputFile = if (arguments.size < 1) {
-        System.err.println("Input file not selected. Choosing 'input.txt' in the current directory.")
-        "input.txt"
+        System.err.println("Usage: adventofcode day02 <INPUT FILE> [--trace] [--enable-1202]")
+        System.exit(1)
+        throw Exception("Whoop")
     } else {
         arguments[0]
     }
 
     val program = File(inputFile).readText().split(",").map(::parseItem).toIntArray()
-    solvePart1(program, trace, fixError)
+    solvePart1(program, trace, enable1202)
     solvePart2(program, trace)
 }
 
 fun parseItem(input: String): Int = input.toInt()
 
-fun solvePart1(program: IntArray, trace: Boolean, fixError: Boolean) {
+fun solvePart1(program: IntArray, trace: Boolean, enable1202: Boolean) {
     var memory = program.copyOf();
-    if (fixError) {
-        // Patch the 1202 error
+    if (enable1202) {
+        // Patch the 1202 noun and verb in
         memory[1] = 12
         memory[2] = 2
     }
