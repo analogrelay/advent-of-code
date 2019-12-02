@@ -1,4 +1,4 @@
-package com.github.anurse.adventofcode.day01
+package adventofcode.day01
 
 import java.io.File
 
