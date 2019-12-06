@@ -46,7 +46,7 @@ data class Line(val start: Point, val end: Point) {
 
 fun main(args: Array<String>) {
     val inputFile = if (args.size < 1) {
-        System.err.println("Usage: adventofcode day03 <INPUT FILE> [--trace] [--enable-1202]")
+        System.err.println("Usage: adventofcode day03 <INPUT FILE>")
         System.exit(1)
         throw Exception("Whoop")
     } else {

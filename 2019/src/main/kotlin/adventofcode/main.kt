@@ -21,6 +21,9 @@ fun main(args: Array<String>) {
         1 -> adventofcode.day01.main(args.drop(1).toTypedArray())
         2 -> adventofcode.day02.main(args.drop(1).toTypedArray())
         3 -> adventofcode.day03.main(args.drop(1).toTypedArray())
+        4 -> adventofcode.day04.main(args.drop(1).toTypedArray())
+        5 -> adventofcode.day05.main(args.drop(1).toTypedArray())
+        6 -> adventofcode.day06.main(args.drop(1).toTypedArray())
         else -> throw Exception("Day not yet implemented: $dayNumber")
     }
 }
