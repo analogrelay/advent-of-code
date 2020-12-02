@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strconv"
 )
 
@@ -15,20 +13,16 @@ func day1(args []string) error {
 	if len(args) < 1 {
 		return fmt.Errorf("Usage: aoc2020 1 [input file]")
 	}
-	filePath := args[0]
-	file, err := os.Open(filePath)
+	lines, err := readLines(args[0])
 	if err != nil {
-		return fmt.Errorf("error opening file: %v", err)
+		return fmt.Errorf("error reading input: %v", err)
 	}
-	defer file.Close()
 
-	scanner := bufio.NewScanner(file)
 	values := make([]int, 0)
-	for scanner.Scan() {
-		text := scanner.Text()
-		converted, err := strconv.Atoi(text)
+	for _, line := range lines {
+		converted, err := strconv.Atoi(line)
 		if err != nil {
-			return fmt.Errorf("error converting number '%s': %v", text, err)
+			return fmt.Errorf("error converting number '%s': %v", line, err)
 		}
 		values = append(values, converted)
 	}
@@ -37,13 +31,13 @@ func day1(args []string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("Part 1: ", x*y)
+	fmt.Println("Part 1:", x*y)
 
 	x, y, z, err := findPart2(values)
 	if err != nil {
 		return err
 	}
-	fmt.Println("Part 2: ", x*y*z)
+	fmt.Println("Part 2:", x*y*z)
 
 	return nil
 }

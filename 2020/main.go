@@ -13,6 +13,10 @@ var days map[int]dayHandler = make(map[int]dayHandler)
 func main() {
 	if len(os.Args) < 2 {
 		fmt.Fprintf(os.Stderr, "Usage: %s [day number]\n", os.Args[0])
+		fmt.Fprintln(os.Stderr, "Days:")
+		for number := range days {
+			fmt.Fprintln(os.Stderr, "* ", number)
+		}
 		os.Exit(1)
 	}
 
