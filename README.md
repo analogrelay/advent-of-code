@@ -7,5 +7,6 @@ My solutions to http://adventofcode.com/, written in various programming languag
 * [2017](http://adventofcode.com/2017) - [In Common Lisp](2017)
 * [2018](http://adventofcode.com/2018) - [In F#](2018)
 * [2019](http://adventofcode.com/2018) - [In Kotlin](2019)
+* [2020](http://adventofcode.com/2020) - [In Go](2020)
 
 Note: Input files are provided so you can try it out. However, input is unique to the user logged in to Advent of Code so if you're going to try this yourself, make sure you get the input from the site!
