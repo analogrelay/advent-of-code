@@ -1,32 +1,17 @@
-package main
+package day05
 
 import (
 	"fmt"
 	"sort"
 )
 
-func init() {
-	registerDay(5, day05)
-}
-
-func day05(args []string) error {
-	if len(args) < 1 {
-		return fmt.Errorf("Usage: aoc2020 5 [input file]")
-	}
-	lines, err := readLines(args[0])
-	if err != nil {
-		return fmt.Errorf("error reading input: %v", err)
-	}
-
+func Run(lines []string) error {
 	fmt.Println("Total Boarding Passes:", len(lines))
 
 	maxSeatID := 0
 	presentSeats := make([]int, 0, len(lines))
 	for _, line := range lines {
 		seatID := getSeatID(line)
-		if err != nil {
-			return fmt.Errorf("error computing seat ID '%s': %v", line, err)
-		}
 		if seatID > maxSeatID {
 			maxSeatID = seatID
 		}

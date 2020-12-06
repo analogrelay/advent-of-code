@@ -1,6 +1,8 @@
-package main
+package day03
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type board struct {
 	terrain []bool
@@ -44,19 +46,7 @@ func (b *board) walk(xoff, yoff int) int {
 	return count
 }
 
-func init() {
-	registerDay(3, day03)
-}
-
-func day03(args []string) error {
-	if len(args) < 1 {
-		return fmt.Errorf("Usage: aoc2020 3 [input file]")
-	}
-	lines, err := readLines(args[0])
-	if err != nil {
-		return fmt.Errorf("error reading input: %v", err)
-	}
-
+func Run(lines []string) error {
 	board := parseBoard(lines)
 
 	// Try all the walks

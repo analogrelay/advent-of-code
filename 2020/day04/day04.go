@@ -1,4 +1,4 @@
-package main
+package day04
 
 import (
 	"fmt"
@@ -71,19 +71,7 @@ func validateYear(year string, min, max int) bool {
 	return val >= min && val <= max
 }
 
-func init() {
-	registerDay(4, day04)
-}
-
-func day04(args []string) error {
-	if len(args) < 1 {
-		return fmt.Errorf("Usage: aoc2020 4 [input file]")
-	}
-	lines, err := readLines(args[0])
-	if err != nil {
-		return fmt.Errorf("error reading input: %v", err)
-	}
-
+func Run(lines []string) error {
 	passports, err := parsePassports(lines)
 	if err != nil {
 		return fmt.Errorf("error processing passports: %v", err)

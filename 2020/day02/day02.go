@@ -1,4 +1,4 @@
-package main
+package day02
 
 import (
 	"fmt"
@@ -33,19 +33,7 @@ type passwordEntry struct {
 	Password string
 }
 
-func init() {
-	registerDay(2, day2)
-}
-
-func day2(args []string) error {
-	if len(args) < 1 {
-		return fmt.Errorf("Usage: aoc2020 2 [input file]")
-	}
-	lines, err := readLines(args[0])
-	if err != nil {
-		return fmt.Errorf("error reading input: %v", err)
-	}
-
+func Run(lines []string) error {
 	legacyValid := 0
 	newValid := 0
 	for _, line := range lines {

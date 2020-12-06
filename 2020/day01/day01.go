@@ -1,23 +1,11 @@
-package main
+package day01
 
 import (
 	"fmt"
 	"strconv"
 )
 
-func init() {
-	registerDay(1, day1)
-}
-
-func day1(args []string) error {
-	if len(args) < 1 {
-		return fmt.Errorf("Usage: aoc2020 1 [input file]")
-	}
-	lines, err := readLines(args[0])
-	if err != nil {
-		return fmt.Errorf("error reading input: %v", err)
-	}
-
+func Run(lines []string) error {
 	values := make([]int, 0)
 	for _, line := range lines {
 		converted, err := strconv.Atoi(line)
