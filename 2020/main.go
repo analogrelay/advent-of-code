@@ -12,6 +12,7 @@ import (
 	"github.com/anurse/advent-of-code/day04"
 	"github.com/anurse/advent-of-code/day05"
 	"github.com/anurse/advent-of-code/day06"
+	"github.com/anurse/advent-of-code/day07"
 )
 
 func init() {
@@ -21,6 +22,7 @@ func init() {
 	advent.RegisterDay(4, advent.WithInputFileAsLines(day04.Run))
 	advent.RegisterDay(5, advent.WithInputFileAsLines(day05.Run))
 	advent.RegisterDay(6, advent.WithInputFileAsLines(day06.Run))
+	advent.RegisterDay(7, advent.WithInputFileAsLines(day07.Run))
 }
 
 func main() {
