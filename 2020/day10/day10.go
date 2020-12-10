@@ -60,15 +60,3 @@ func GetPermutationCount(adapters []int) int {
 
 	return ways[adapters[len(adapters)-1]]
 }
-
-func NumberOfWaysForward(current int, adapters []int) int {
-	count := 0
-	for _, val := range adapters {
-		if val-current <= 3 {
-			count++
-		} else {
-			return count
-		}
-	}
-	return count
-}
