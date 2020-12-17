@@ -18,6 +18,19 @@ import (
 	"github.com/anurse/advent-of-code/day10"
 	"github.com/anurse/advent-of-code/day11"
 	"github.com/anurse/advent-of-code/day12"
+	"github.com/anurse/advent-of-code/day13"
+	"github.com/anurse/advent-of-code/day14"
+	"github.com/anurse/advent-of-code/day15"
+	"github.com/anurse/advent-of-code/day16"
+	"github.com/anurse/advent-of-code/day17"
+	"github.com/anurse/advent-of-code/day18"
+	"github.com/anurse/advent-of-code/day19"
+	"github.com/anurse/advent-of-code/day20"
+	"github.com/anurse/advent-of-code/day21"
+	"github.com/anurse/advent-of-code/day22"
+	"github.com/anurse/advent-of-code/day23"
+	"github.com/anurse/advent-of-code/day24"
+	"github.com/anurse/advent-of-code/day25"
 )
 
 func init() {
@@ -33,6 +46,19 @@ func init() {
 	advent.RegisterDay(10, advent.WithInputFileAsLines(day10.Run))
 	advent.RegisterDay(11, advent.WithInputFileAsLines(day11.Run))
 	advent.RegisterDay(12, advent.WithInputFileAsLines(day12.Run))
+	advent.RegisterDay(13, advent.WithInputFileAsLines(day13.Run))
+	advent.RegisterDay(14, advent.WithInputFileAsLines(day14.Run))
+	advent.RegisterDay(15, advent.WithInputFileAsLines(day15.Run))
+	advent.RegisterDay(16, advent.WithInputFileAsLines(day16.Run))
+	advent.RegisterDay(17, advent.WithInputFileAsLines(day17.Run))
+	advent.RegisterDay(18, advent.WithInputFileAsLines(day18.Run))
+	advent.RegisterDay(19, advent.WithInputFileAsLines(day19.Run))
+	advent.RegisterDay(20, advent.WithInputFileAsLines(day20.Run))
+	advent.RegisterDay(21, advent.WithInputFileAsLines(day21.Run))
+	advent.RegisterDay(22, advent.WithInputFileAsLines(day22.Run))
+	advent.RegisterDay(23, advent.WithInputFileAsLines(day23.Run))
+	advent.RegisterDay(24, advent.WithInputFileAsLines(day24.Run))
+	advent.RegisterDay(25, advent.WithInputFileAsLines(day25.Run))
 }
 
 func main() {

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+for day in day{01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25}; do
+    if [ ! -d "$day" ]; then
+        mkdir $day
+    fi
+
+    if [ ! -f "$day/$day.go" ]; then
+        cat <<EOF > "$day/$day.go"
+package $day
+
+import "fmt"
+
+func Run(lines []string) error {
+    return fmt.Errorf("not yet implemented")
+}
+EOF
+    fi
+
+    if [ ! -f "$day/${day}_test.go" ]; then
+        cat <<EOF > "$day/${day}_test.go"
+package $day
+EOF
+    fi
+
+    if [ ! -f "$day/input.txt" ]; then
+        touch "$day/input.txt"
+    fi
+done
