@@ -8,5 +8,13 @@ cd "$ROOTDIR"
 
 [ -n "${CONFIGURATION-}" ] || CONFIGURATION="Debug"
 
-script/build "$CONFIGURATION"
+outfile="build/output.$CONFIGURATION.log"
+
+echo "*** Building... ***"
+if ! script/build "$CONFIGURATION" > $outfile; then
+    echo "*** Build Failed ***"
+    cat $outfile
+    exit 1
+fi
+echo "*** Build Successful ***"
 build/$CONFIGURATION/adventofcode "$@"
