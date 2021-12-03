@@ -1,0 +1,12 @@
+#!/bin/bash -u
+{ set +x; } 2>/dev/null
+SOURCE=$0
+DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+ROOTDIR=$(cd $DIR && cd ../ && pwd)
+
+cd "$ROOTDIR"
+
+[ -n "${CONFIGURATION-}" ] || CONFIGURATION="Debug"
+
+script/build "$CONFIGURATION"
+build/$CONFIGURATION/adventofcode "$@"
