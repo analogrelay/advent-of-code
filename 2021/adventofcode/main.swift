@@ -8,15 +8,16 @@
 
 import Foundation
 
+let days = [
+    day01,
+    day02
+]
+
 func runDay(number: Int, args: ArraySlice<String>) throws {
-    switch number {
-    case 1:
-        try day01(args);
-        break;
-    default:
-        fputs("Day \(number) not implemented!\n", stderr)
-        exit(1)
+    if number < 1 || number > days.count {
+        throw SimpleError.error("Day not implemented: \(number)")
     }
+    try days[number - 1](args)
 }
 
 if CommandLine.arguments.count < 2 {

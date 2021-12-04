@@ -10,6 +10,7 @@
 		ABCB126BD61EBC097A1FBD5D /* SimpleError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCB163CCB3DF19256E3ADCB /* SimpleError.swift */; };
 		ABCB141AA99DBF03022E6C42 /* day01.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCB1F5CDAD661579BDFB97A /* day01.swift */; };
 		ABCB1547F4757B4A5384C213 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCB1F64F82975B897AD4AA6 /* Utils.swift */; };
+		ABCB1A8D8C8C8615FD68B07D /* day02.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCB14FA942C5989E6DC0A1A /* day02.swift */; };
 		ABCB1C0BA0E8304627F64005 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCB1647013E256164F48DBD /* main.swift */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +28,7 @@
 
 /* Begin PBXFileReference section */
 		ABCB12FB57EF41342FB843A5 /* adventofcode */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = adventofcode; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABCB14FA942C5989E6DC0A1A /* day02.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = day02.swift; sourceTree = "<group>"; };
 		ABCB163CCB3DF19256E3ADCB /* SimpleError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleError.swift; sourceTree = "<group>"; };
 		ABCB1647013E256164F48DBD /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		ABCB1B9EE9236FD6BA3DE934 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -60,6 +62,7 @@
 				ABCB1F5CDAD661579BDFB97A /* day01.swift */,
 				ABCB163CCB3DF19256E3ADCB /* SimpleError.swift */,
 				ABCB1F64F82975B897AD4AA6 /* Utils.swift */,
+				ABCB14FA942C5989E6DC0A1A /* day02.swift */,
 			);
 			path = adventofcode;
 			sourceTree = "<group>";
@@ -124,6 +127,7 @@
 				ABCB141AA99DBF03022E6C42 /* day01.swift in Sources */,
 				ABCB126BD61EBC097A1FBD5D /* SimpleError.swift in Sources */,
 				ABCB1547F4757B4A5384C213 /* Utils.swift in Sources */,
+				ABCB1A8D8C8C8615FD68B07D /* day02.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
