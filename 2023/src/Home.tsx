@@ -1,14 +1,23 @@
 import { Link } from "react-router-dom";
+import { useWasm } from "./Wasm";
+import { useMemo } from "react";
 
 const days = Array.from({ length: 25 }, (_, i) => i + 1);
 
-function dayImplemented(day: number) {
-    // TODO: Get this from the Rust side
-    return day <= 3;
-}
-
 function DayButton({ day }: { day: number }) {
-    if(dayImplemented(day)) {
+    const wasm = useWasm();
+
+    const dayImplemented = useMemo(() => {
+        if(!wasm) {
+            return false;
+        }
+
+        const dayName = `day${day.toString().padStart(2, "0")}`;
+        const funcName = `${dayName}_part1`;
+        return !!wasm[funcName];
+    }, [wasm, day]);
+
+    if(dayImplemented) {
         return <Link to={`/days/${day}`} className="bg-green-100 hover:ring-blue-500 hover:ring-2 active:bg-white rounded p-2 m-2 text-center">
             Day {day}
         </Link>

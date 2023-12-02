@@ -11,8 +11,8 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <WasmProvider>
-      <App />
-  </WasmProvider>
+        <App />
+    </WasmProvider>
   </React.StrictMode>
 );
 

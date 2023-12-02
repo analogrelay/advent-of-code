@@ -1,8 +1,12 @@
-import init, { type InitOutput } from "aoc2023";
+import init, * as Wasm from "aoc2023";
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 
+export type WasmInterface = {
+    [key: string]: (input: string) => string;
+}
+
 export interface WasmContextState {
-    wasm: InitOutput | null;
+    wasm: WasmInterface | null;
 }
 
 export const WasmContext = createContext<WasmContextState | null>(null);
@@ -13,14 +17,14 @@ export function useWasm() {
 }
 
 export default function WasmProvider({ children }: PropsWithChildren) {
-    const [ wasm, setWasm ] = useState<InitOutput | null>(null);
+    const [ wasm, setWasm ] = useState<WasmInterface | null>(null);
 
     useEffect(() => {
         (async function initWasm() {
             console.log("Loading WASM Module...");
-            const module = await init();
+            await init();
             console.log("WASM Module loaded!");
-            setWasm(module);
+            setWasm(Wasm as any);
         })();
     }, [wasm, setWasm]);
 

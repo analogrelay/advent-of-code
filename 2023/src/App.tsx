@@ -2,7 +2,6 @@ import { RouteObject, RouterProvider, createBrowserRouter } from 'react-router-d
 import './App.css';
 import Home from './Home';
 import Day from './Day';
-import init from "aoc2023";
 
 const dayRoutes: RouteObject[] = Array.from({ length: 25 }, (_, i) => ({
   path: `days/${i + 1}`,

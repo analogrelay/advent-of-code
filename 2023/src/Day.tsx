@@ -60,7 +60,12 @@ function FileUpload({onFileSelect}: FileUploadProps) {
     </div>
 }
 
-function StandardDayPart({part}: {part: number}) {
+interface PartProps {
+    day: number,
+    part: number
+}
+
+function StandardDayPart({day, part}: PartProps) {
     const [ result, setResult ] = useState<string | null>(null);
     const [ file, setFile ] = useState<File | null>(null);
     const [ input, setInput ] = useState<string | null>(null);
@@ -80,22 +85,33 @@ function StandardDayPart({part}: {part: number}) {
         }
 
         // Get an array buffer with either the file or input text, preferring the input text
-        const inputBuffer = input 
-            ? new TextEncoder().encode(input) 
-            : await file?.arrayBuffer();
-        if(!inputBuffer) {
+        const puzzleInput = input 
+            ? input
+            : await file?.text();
+        if(!puzzleInput) {
             return;
         }
-        
-        wasm.greet();
-    }, [file, input]);
+
+        // Get the function to call based on the day and part
+        const dayName = `day${day.toString().padStart(2, "0")}`;
+        const partName = `part${part}`;
+        const funcName = `${dayName}_${partName}`;
+        const func = wasm[funcName];
+        if(!func) {
+            setResult(`Function ${funcName} not found in WASM module`);
+        }
+        else {
+            const result = func(puzzleInput);
+            setResult(result);
+        }
+    }, [wasm, day, part, file, input]);
 
     const disabledReason = useCallback(() => {
         if(!wasm) {
             return "(loading WASM...)";
         }
 
-        if(!file && !input) {
+    if(!file && !input) {
             return "(no input provided)";
         }
 
@@ -121,7 +137,7 @@ function StandardDayPart({part}: {part: number}) {
             </button>}
         {result && <>
             <h3 className="font-semibold text-lg">Result</h3>
-            <pre className="bg-white border border-gray-400 bg-gray-200 rounded m-4">{result}</pre>
+            <pre className="bg-white border border-gray-400 bg-gray-200 rounded m-4 p-4">{result}</pre>
         </>}
     </div>
 }
@@ -136,8 +152,8 @@ export default function Day({day}: DayProps) {
 
             <div className="grid grid-cols-2 mt-4 gap-2 grid-flow-row justify-stretch">
                 {/* We can support custom day part UI here if needed */}
-                <StandardDayPart part={1} />
-                <StandardDayPart part={2} />
+                <StandardDayPart day={day} part={1} />
+                <StandardDayPart day={day} part={2} />
             </div>
         </div>
     </div>

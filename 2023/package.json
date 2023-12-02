@@ -10,18 +10,21 @@
     "@types/node": "^16.18.66",
     "@types/react": "^18.2.40",
     "@types/react-dom": "^18.2.17",
+    "aoc2023": "file:./wasm",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.1",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4",
-    "aoc2023": "file:./wasm"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
+    "prestart": "run-s clean:wasm build:wasm:dev reinstall:wasm",
     "build:wasm:dev": "cd rust-aoc2023 && rm -Rf ../wasm && wasm-pack build --out-dir ../wasm --dev --target web",
     "build:wasm:release": "cd rust-aoc2023 && rm -Rf ../wasm && wasm-pack build --out-dir ../wasm --target web",
+    "clean:wasm": "rm -Rf ../wasm",
+    "reinstall:wasm": "rm -Rf ./node_modules/aoc2023 && rm -Rf ./node_modules/.cache && npm install",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -45,6 +48,7 @@
     ]
   },
   "devDependencies": {
+    "npm-run-all": "^4.1.5",
     "tailwindcss": "^3.3.5"
   }
 }
