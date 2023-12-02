@@ -15,10 +15,13 @@
     "react-router-dom": "^6.20.1",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "aoc2023": "file:./wasm"
   },
   "scripts": {
     "start": "react-scripts start",
+    "build:wasm:dev": "cd rust-aoc2023 && rm -Rf ../wasm && wasm-pack build --out-dir ../wasm --dev --target web",
+    "build:wasm:release": "cd rust-aoc2023 && rm -Rf ../wasm && wasm-pack build --out-dir ../wasm --target web",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

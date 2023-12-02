@@ -1,5 +1,6 @@
 import { ChangeEvent, useCallback, useRef, DragEvent, useState } from "react"
 import { Link } from "react-router-dom"
+import { useWasm } from "./Wasm";
 
 export interface DayProps {
     day: number
@@ -63,6 +64,7 @@ function StandardDayPart({part}: {part: number}) {
     const [ result, setResult ] = useState<string | null>(null);
     const [ file, setFile ] = useState<File | null>(null);
     const [ input, setInput ] = useState<string | null>(null);
+    const wasm = useWasm();
 
     const handleFileSelect = useCallback((file: File) => {
         setFile(file);
@@ -73,6 +75,10 @@ function StandardDayPart({part}: {part: number}) {
     }, [setInput]);
 
     const handleSolve = useCallback(async () => {
+        if(!wasm) {
+            return;
+        }
+
         // Get an array buffer with either the file or input text, preferring the input text
         const inputBuffer = input 
             ? new TextEncoder().encode(input) 
@@ -81,8 +87,20 @@ function StandardDayPart({part}: {part: number}) {
             return;
         }
         
-        alert(`TODO: Send ${inputBuffer?.byteLength} byte input to Rust and get result back`);
+        wasm.greet();
     }, [file, input]);
+
+    const disabledReason = useCallback(() => {
+        if(!wasm) {
+            return "(loading WASM...)";
+        }
+
+        if(!file && !input) {
+            return "(no input provided)";
+        }
+
+        return "";
+    }, [wasm, file, input]);
 
     return <div className="text-center flex flex-col gap-2">
         <h3 className="font-semibold text-lg">Part {part}</h3>
@@ -94,12 +112,12 @@ function StandardDayPart({part}: {part: number}) {
                 className="border-2 rounded-lg p-4 w-full h-96" 
                 onChange={handleTextInput} />
         </div>
-        {file || input 
+        {wasm && (file || input)
             ? <button onClick={handleSolve} className="bg-green-100 hover:ring-blue-500 hover:ring-2 active:bg-white rounded p-2 m-2 text-center">
                 Solve
             </button>
             : <button disabled={true} className="bg-gray-100 rounded p-2 m-2">
-                Solve
+                Solve {disabledReason()}
             </button>}
         {result && <>
             <h3 className="font-semibold text-lg">Result</h3>
